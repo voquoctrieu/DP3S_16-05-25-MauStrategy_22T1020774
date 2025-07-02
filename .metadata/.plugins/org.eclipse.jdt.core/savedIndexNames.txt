@@ -1,0 +1,8 @@
+INDEX VERSION 1.134+D:\DP3S_16-05-25-MauStrategy_22T1020774\.metadata\.plugins\org.eclipse.jdt.core
+1532552293.index
+2704311786.index
+1865797976.index
+3712201569.index
+2088318958.index
+3413270776.index
+809261408.index

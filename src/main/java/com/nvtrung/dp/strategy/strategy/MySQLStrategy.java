@@ -1,0 +1,60 @@
+package com.nvtrung.dp.strategy.strategy;
+
+import com.nvtrung.dp.strategy.model.SinhVien;
+import java.sql.*;
+import java.util.List;
+
+public class MySQLStrategy implements DatabaseStrategy {
+    private Connection connection;
+    private static final String URL = "jdbc:mysql://localhost:3306/sinhvien_db";
+    private static final String USER = "root";
+    private static final String PASSWORD = "password";
+
+    public MySQLStrategy() {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void insert(List<SinhVien> sinhVienList) {
+        String sql = "INSERT INTO sinhvien (id, ho_ten, gioi_tinh, ngay_sinh, dia_chi, email) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (SinhVien sv : sinhVienList) {
+                pstmt.setInt(1, sv.getId());
+                pstmt.setString(2, sv.getHoTen());
+                pstmt.setString(3, sv.getGioiTinh());
+                pstmt.setDate(4, new java.sql.Date(sv.getNgaySinh().getTime()));
+                pstmt.setString(5, sv.getDiaChi());
+                pstmt.setString(6, sv.getEmail());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void clearTable() {
+        String sql = "DELETE FROM sinhvien";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void close() {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+} 
